@@ -1,0 +1,19 @@
+services:
+  site:
+    image: scaling-book
+    build: .
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/site
+      - bundle:/usr/local/bundle
+      - jekyll-site:/site/_site
+      - jekyll-cache:/site/.jekyll-cache
+    command: >
+      sh -c "bundle install &&
+      bundle exec jekyll serve --host 0.0.0.0 --port 4000 --incremental --watch"
+
+volumes:
+  bundle:
+  jekyll-site:
+  jekyll-cache:
