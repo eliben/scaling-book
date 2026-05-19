@@ -18,6 +18,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      JEKYLL_ENV: production
     outputs:
       branch_path: ${{ steps.path.outputs.branch_path }}
     steps:
@@ -62,10 +64,13 @@ jobs:
         run: |
           rm -rf _site
           mkdir -p _site
+          cat > _config_pages.yml <<EOF
+          url: "https://eliben.github.io"
+          baseurl: "${{ steps.path.outputs.baseurl }}"
+          EOF
           bundle exec jekyll build \
-            --destination "_site/${{ steps.path.outputs.branch_path }}" \
-            --url "https://eliben.github.io" \
-            --baseurl "${{ steps.path.outputs.baseurl }}"
+            --config _config.yml,_config_pages.yml \
+            --destination "_site/${{ steps.path.outputs.branch_path }}"
 
       - name: Add root redirect
         run: |
